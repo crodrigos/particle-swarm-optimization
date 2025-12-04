@@ -32,7 +32,7 @@ class ParticleSwarmOptimization:
         Particles = self.generateParticles(NParticles, limits=self.dimensions)
         snaps = []
         for i in range(Generation):
-            snapshot = ParticleSwarmOptimization._calculateSingleGeneration(Particles, self.houses, n=i)
+            snapshot = self.calculateSingleGeneration(Particles, self.houses, n=i)
             # Save snapshot
             Particles = snapshot.particles
             snaps.append(snapshot.copy())
@@ -44,27 +44,22 @@ class ParticleSwarmOptimization:
             limits = [0, 100, 0, 100]
         return [House.createRandom(limits[0], limits[1], limits[2], limits[3]) for i in range(N)]
 
-    @staticmethod
-    def _calculateSingleGeneration(Particles: list[Particle], Houses: list[House], n:int = 0) -> GenerationSnapshot:    
-        best = ParticleSwarmOptimization._getBest(Particles, Houses)
-        Particles = ParticleSwarmOptimization._changeAllParticlesDirection(best,Particles)
-        Particles = ParticleSwarmOptimization._moveAlongVectors(Particles)
+    def calculateSingleGeneration(self, Particles: list[Particle], Houses: list[House], n:int = 0) -> GenerationSnapshot:
+        best = self.getBest(Particles, Houses)
+        Particles = self.changeAllParticlesDirection(best, Particles)
+        Particles = self.moveAlongVectors(Particles)
         return GenerationSnapshot(n, Houses, Particles, best)
 
-    @staticmethod
-    def _getBest(particles: list[Particle], houses: list[House]) -> Particle: 
+    def getBest(self, particles: list[Particle], houses: list[House]) -> Particle:
         best = [math.inf, None]
         for particle in particles:
-            distSum = 0
-            for house in houses:
-                distSum += house.distance(particle)
-            if (distSum < best[0]):
+            distSum = self.evaluate(particle)
+            if distSum < best[0]:
                 best = [distSum, particle]
         return best[1]        
         
 
-    @staticmethod
-    def _changeAllParticlesDirection(best: Particle, others: list[Particle]) -> list[Particle]:
+    def changeAllParticlesDirection(self, best: Particle, others: list[Particle]) -> list[Particle]:
         cpy = others.copy()
         #print(best.position)
         for particle in cpy:
@@ -73,19 +68,16 @@ class ParticleSwarmOptimization:
             NewVelocity = (CurrentVelocity + VectorToBest).magnitude(1)
             particle.setVelocity(NewVelocity.getX(),NewVelocity.getY())
         return cpy
-    
-    @staticmethod
-    def _moveAlongVectors(particles: list[Particle]) -> list[Particle]:
+
+    def moveAlongVectors(self, particles: list[Particle]) -> list[Particle]:
         ps = particles.copy()
         for part in ps:
-            newpos = part.getPosition() + part.getVelocity()
-            part.setPosition(newpos.getX(), newpos.getY())
+            NewPosition = part.getPosition() + part.getVelocity()
+            part.setPosition(NewPosition.getX(), NewPosition.getY())
         return ps
-    
-    @staticmethod
-    def evaluate(p1: Particle, p2: Particle) -> float:
-        return p1.distance(p2)
 
-    @staticmethod
-    def evaluateCoords(x1: float, y1: float, x2: float, y2: float) -> float:
-        return Particle(x1, y1).distance(Particle(x2,y2))
+    def evaluate(self, p1: Particle) -> float:
+        sum = 0
+        for house in self.houses:
+            sum += p1.distance(house)
+        return sum
