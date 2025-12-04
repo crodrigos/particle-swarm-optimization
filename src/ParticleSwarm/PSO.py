@@ -25,6 +25,8 @@ class ParticleSwarmOptimization:
 
         self.houses = self.generateParticles(NHouses, limits=self.dimensions)
 
+    def getHouses(self) -> List[Particle]:
+        return self.houses
 
     def calculate(self, NParticles:int, Generation:int) -> list[GenerationSnapshot]:
         Particles = self.generateParticles(NParticles, limits=self.dimensions)
@@ -84,3 +86,6 @@ class ParticleSwarmOptimization:
     def evaluate(p1: Particle, p2: Particle) -> float:
         return p1.distance(p2)
 
+    @staticmethod
+    def evaluateCoords(x1: float, y1: float, x2: float, y2: float) -> float:
+        return Particle(x1, y1).distance(Particle(x2,y2))

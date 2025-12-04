@@ -1,23 +1,25 @@
+floatType = float
+
 class Vector2D:
 
     x = 0
     y = 0
 
-    def __init__(self, X: float, Y: float):
+    def __init__(self, X: floatType, Y: floatType):
         self.x = X
         self.y = Y
 
-    def getX(self) -> float:
+    def getX(self) -> floatType:
         return self.x
 
-    def setX(self, X: float):
+    def setX(self, X: floatType):
         self.x = X
 
 
-    def getY(self) -> float:
+    def getY(self) -> floatType:
         return self.y
 
-    def setY(self, Y: float):
+    def setY(self, Y: floatType):
         self.y = Y
 
 
@@ -31,7 +33,7 @@ class Vector2D:
         ycoord = a.getY() - b.getY()
         return Vector2D(xcoord, ycoord)
     
-    def __mul__(a, b: float):
+    def __mul__(a, b: floatType):
         xcoord = a.getX() * b
         ycoord = a.getY() * b
         return Vector2D(xcoord, ycoord)
@@ -42,10 +44,10 @@ class Vector2D:
     def __repr__(self):
         return f'[{self.x}, {self.y}]'
 
-    def getMagnitude(self) -> float:
+    def getMagnitude(self) -> floatType:
         return (self.x**2 + self.y**2)**0.5
 
-    def magnitude(self, magnitude: float) -> 'Vector2D':
+    def magnitude(self, magnitude: floatType) -> 'Vector2D':
         if (magnitude==0):
             return self
         xval =  magnitude * self.x / self.getMagnitude()
