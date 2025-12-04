@@ -5,8 +5,9 @@ import copy
 class GenerationSnapshot:
 
 
-    def __init__(self, n: int, houses: list[Particle], particles: list[Particle], best : Particle = None):
+    def __init__(self, n: int, houses: list[Particle], stores: list[Particle], particles: list[Particle], best : Particle = None):
         self.houses = houses
+        self.stores = stores
         self.particles = particles
         self.gennum = n
         self.best = best
@@ -15,6 +16,7 @@ class GenerationSnapshot:
         # Deep copy to ensure particle positions are independent
         return GenerationSnapshot(self.gennum,
                                   copy.deepcopy(self.houses),
+                                  copy.deepcopy(self.stores),
                                   copy.deepcopy(self.particles),
                                   copy.copy(self.best))
         

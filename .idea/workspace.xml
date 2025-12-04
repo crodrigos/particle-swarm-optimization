@@ -6,6 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="42644b46-fa99-4b48-9636-1182f3bbb905" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ParticleSwarm/GenerationSnapshot.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/ParticleSwarm/GenerationSnapshot.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/ParticleSwarm/PSO.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/ParticleSwarm/PSO.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.ipynb" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.ipynb" afterDir="false" />
     </list>
@@ -95,7 +96,7 @@
       <option name="presentableId" value="Default" />
       <updated>1764840957789</updated>
       <workItem from="1764840975452" duration="4123000" />
-      <workItem from="1764858403286" duration="5211000" />
+      <workItem from="1764858403286" duration="6454000" />
     </task>
     <servers />
   </component>

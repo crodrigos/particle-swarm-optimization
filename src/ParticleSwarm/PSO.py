@@ -18,25 +18,27 @@ class ParticleSwarmOptimization:
 
     _DEFAULT_DIMENSIONS : tuple[float,float,float,float] = [0,100,0,100]
 
-    def __init__(self, NHouses:int, Dimensions: tuple[float,float,float,float] = None):
+    def __init__(self, NHouses:int, NStores:int, Dimensions: tuple[float,float,float,float] = None):
         self.dimensions = Dimensions
         if not Dimensions:
             self.dimensions = self._DEFAULT_DIMENSIONS
 
         self.houses = self.generateParticles(NHouses, limits=self.dimensions)
+        self.stores = self.generateParticles(NStores, limits=self.dimensions)
 
     def getHouses(self) -> List[Particle]:
         return self.houses
+
+    def getStores(self) -> List[Particle]:
+        return self.stores
 
     def calculate(self, NParticles:int, Generation:int) -> list[GenerationSnapshot]:
         Particles = self.generateParticles(NParticles, limits=self.dimensions)
         snaps = []
         for i in range(Generation):
-            snapshot = self.calculateSingleGeneration(Particles, self.houses, n=i)
-            # Save snapshot
+            snapshot = self.calculateSingleGeneration(Particles, n=i)
             Particles = snapshot.particles
             snaps.append(snapshot.copy())
-
         return snaps
 
     def generateParticles(self, N : int, limits: tuple[float, float, float, float]  = None) -> list[House]:
@@ -44,13 +46,13 @@ class ParticleSwarmOptimization:
             limits = [0, 100, 0, 100]
         return [House.createRandom(limits[0], limits[1], limits[2], limits[3]) for i in range(N)]
 
-    def calculateSingleGeneration(self, Particles: list[Particle], Houses: list[House], n:int = 0) -> GenerationSnapshot:
-        best = self.getBest(Particles, Houses)
+    def calculateSingleGeneration(self, Particles: list[Particle], n:int = 0) -> GenerationSnapshot:
+        best = self.getBest(Particles)
         Particles = self.changeAllParticlesDirection(best, Particles)
         Particles = self.moveAlongVectors(Particles)
-        return GenerationSnapshot(n, Houses, Particles, best)
+        return GenerationSnapshot(n, self.houses, self.stores, Particles, best)
 
-    def getBest(self, particles: list[Particle], houses: list[House]) -> Particle:
+    def getBest(self, particles: list[Particle]) -> Particle:
         best = [math.inf, None]
         for particle in particles:
             distSum = self.evaluate(particle)
@@ -77,7 +79,15 @@ class ParticleSwarmOptimization:
         return ps
 
     def evaluate(self, p1: Particle) -> float:
-        sum = 0
+
+        sumHouse = 0
         for house in self.houses:
-            sum += p1.distance(house)
-        return sum
+            sumHouse -= p1.distance(house)
+        sumHouse = sumHouse / len(self.houses)
+
+        sumStores = 0
+        for store in self.stores:
+            sumStores += p1.distance(store)
+        sumStores = sumStores / len(self.stores)
+
+        return sumHouse + sumStores
